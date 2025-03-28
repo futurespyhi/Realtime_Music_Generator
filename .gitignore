@@ -1,0 +1,34 @@
+# --- 通用开发环境文件 ---
+# 日志文件
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- 前端相关 ---
+frontend/node_modules  # 明确指定前端依赖目录
+frontend/dist          # Vite 构建输出
+frontend/dist-ssr      # SSR 构建输出
+frontend/*.local       # 本地环境文件
+
+# --- 后端相关 ---
+backend/__pycache__    # Python 编译缓存
+backend/*/__pycache__  # Django 应用的编译缓存
+backend/.env           # 环境变量文件
+backend/db.sqlite3     # SQLite 数据库文件
+backend/media          # 上传的媒体文件
+backend/staticfiles    # Django 收集的静态文件
+
+# --- 编辑器/IDE ---
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
