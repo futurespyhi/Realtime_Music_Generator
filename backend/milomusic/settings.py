@@ -49,7 +49,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "backend.urls"
+ROOT_URLCONF = "milomusic.urls"
 
 TEMPLATES = [
     {
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "backend.wsgi.application"
+WSGI_APPLICATION = "milomusic.wsgi.application"
 
 
 # Database
@@ -121,3 +121,15 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+INSTALLED_APPS += ['api']
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# 指向前端构建后的静态文件
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "../frontend/dist"),  # 假设前端构建到 dist/
+]
+
+# 生产环境收集静态文件的目录
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

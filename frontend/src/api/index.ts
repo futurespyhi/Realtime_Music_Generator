@@ -14,7 +14,13 @@ export const generateLyrics = async (text: string, musicType: string) => {
   return response.data;
 };
 
-export const generateMusic = async (lyrics: string) => {
-  const response = await axios.post(`${API_BASE_URL}/generate-music`, { lyrics });
-  return response.data;
+export const generateMusic = async (audio: Blob) => {
+  const formData = new FormData();
+    formData.append('audio', audio);
+    
+    const response = await fetch('http://localhost:8000/api/generate/', {
+        method: 'POST',
+        body: formData,
+    });
+    return await response.json();
 };
