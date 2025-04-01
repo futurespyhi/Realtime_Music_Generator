@@ -17,7 +17,11 @@ Including another URLconf
 
 from django.urls import path
 from api.views import generate_music
+from django.http import HttpResponse
+def home(request):
+    return HttpResponse("Welcome to MiloMusic API!")
 
 urlpatterns = [
+    path('', home),
     path('api/generate/', generate_music),
 ]
