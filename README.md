@@ -1,4 +1,4 @@
-# MiloMusic - Real-time Speech-to-Music Generator
+# MiloMusic - AI-Powered Speech-to-Music Generator
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=flat&logo=github)](https://github.com/futurespyhi/Realtime_Music_Generator)
 
@@ -18,7 +18,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 - **Framework**: Django
 - **Speech Processing**: Custom DeepSeek-V3 model fine-tuned with PyTorch + C++ optimizations
 - **Text-to-Speech**: Spark TTS for distributed music synthesis
-- **Database**: SQLite3 (development), PostgreSQL (production)
+- **Database**: PostgreSQL
 - **Containerization**: Docker
 - **Orchestration**: Kubernetes
 - **Cloud Services**: AWS ECS
@@ -41,14 +41,34 @@ MiloMusic follows a microservices architecture:
 
 ## 📋 Prerequisites
 
-- Python 3.9+
-- Node.js 16+
 - Docker and Docker Compose
-- AWS CLI (for deployment)
+- Git
+- AWS CLI (for production deployment)
 
 ## ⚙️ Installation
 
-### Local Development
+### Docker Deployment (Recommended)
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/MiloMusic.git
+   cd MiloMusic
+   ```
+
+2. Configure environment variables
+   ```bash
+   cp .env.example .env
+   # Edit .env file with your configuration
+   ```
+
+3. Start the application with Docker Compose
+   ```bash
+   docker compose up -d
+   ```
+
+4. Access the application at http://localhost:5173
+
+### Local Development (Alternative)
 
 1. Clone the repository
    ```bash
@@ -90,12 +110,6 @@ MiloMusic follows a microservices architecture:
 
 6. Access the application at http://localhost:5173
 
-### Docker Deployment
-
-```bash
-docker-compose up -d
-```
-
 ## 🚀 Usage
 
 1. Open the application in your browser
@@ -109,11 +123,17 @@ docker-compose up -d
 ## 🧪 Testing
 
 ```bash
-# Backend tests
+# Backend tests (within Docker)
+docker compose exec backend python manage.py test
+
+# Frontend tests (within Docker)
+docker compose exec frontend npm test
+
+# Backend tests (local)
 cd backend
 python manage.py test
 
-# Frontend tests
+# Frontend tests (local)
 cd frontend
 npm test
 ```
