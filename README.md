@@ -7,7 +7,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 ## 🎵 Features
 
 - **Real-time Speech-to-Music Conversion**: Transform your voice into music with only 200ms latency
-- **Multiple Genre Support**: Generate music in various styles including pop, rock, jazz, classical, and more
+- **Multiple Genre Support**: Generate music in various styles including pop, rock, jazz, classical and more
 - **High Accuracy**: 98% user satisfaction rate with generated music quality
 - **Lyrical Relevance**: Advanced NLP ensures generated lyrics maintain semantic connection to speech input
 - **Scalable Architecture**: Supports 750+ concurrent users with 99.9% uptime
@@ -34,7 +34,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 
 MiloMusic follows a microservices architecture:
 
-1. **Speech Recognition Service**: Captures and processes audio input
+1. **Speech Recognition Service**: Captures and processes audio input to text(Speech-to-text using Google Chirp2)
 2. **NLP Service**: Analyzes speech content and emotional tone
 3. **Music Generation Service**: Creates musical compositions based on analyzed input
 4. **Frontend Application**: Provides user interface and audio playback
