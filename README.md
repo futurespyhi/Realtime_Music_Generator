@@ -11,6 +11,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 - **High Accuracy**: 98% user satisfaction rate with generated music quality
 - **Lyrical Relevance**: Advanced NLP ensures generated lyrics maintain semantic connection to speech input
 - **Scalable Architecture**: Supports 750+ concurrent users with 99.9% uptime
+- **Targeted Fine-tunning**: Creates emotion-specific datasets(happy/sad/angry) and retrains the Hugging Face model's prosody layer to generate emotional content like love songs and angry rap
 
 ## 🛠️ Technology Stack
 
