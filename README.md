@@ -24,6 +24,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 - **Containerization**: Docker
 - **Orchestration**: Kubernetes
 - **Cloud Services**: AWS ECS
+- **Service Communication**: gRPC
 
 ### Frontend
 - **Framework**: React
