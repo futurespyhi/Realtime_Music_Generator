@@ -38,7 +38,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 
 MiloMusic follows a microservices architecture:
 
-1. **Speech Recognition Service**: Captures and processes audio input to text(Speech-to-text using Google Chirp2)
+1. **Speech Recognition Service**: Captures and processes audio input to text(Speech-to-text through Google Chirp2)
 2. **NLP Service**: Analyzes speech content and emotional tone
 3. **Music Generation Service**: Creates musical compositions based on analyzed input
 4. **Frontend Application**: Provides user interface and audio playback
