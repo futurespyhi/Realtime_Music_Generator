@@ -33,3 +33,9 @@ docker-compose.override.yml  # 本地开发配置
 
 # --- 系统文件 ---
 Thumbs.db
+
+
+# NLP FOLDER
+nlpdemo/.venv/
+nlpdemo/env/
+nlpdemo/.env
