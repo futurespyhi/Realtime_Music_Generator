@@ -39,3 +39,6 @@ Thumbs.db
 nlpdemo/.venv/
 nlpdemo/env/
 nlpdemo/.env
+# any __pycache__
+__pycache__/
+
