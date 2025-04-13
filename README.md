@@ -11,7 +11,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 - **High Accuracy**: high user satisfaction rate with generated music quality
 - **Lyrical Relevance**: Advanced NLP ensures generated lyrics maintain semantic connection to speech input
 - **Scalable Architecture**: Supports high concurrency with high uptime(AWS ECS's attribute: Auto Scaling - Dynamically scales container instances based on real-time voice request volume)
-- **Targeted Fine-tunning**: Creates emotion-specific datasets(happy/sad/angry) and retrains Spark TTS's prosody layer to generate emotional content like love songs and angry rap
+- **Targeted Fine-tunning**: Creates emotion-specific datasets(happy/sad/angry) and retrains Spark TTS's prosody layer to generate emotional content like love songs, angry rap……
 
 ## 🛠️ Technology Stack
 
