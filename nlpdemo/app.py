@@ -5,9 +5,12 @@ from typing import Any
 import xxhash
 import os
 import groq
+import numpy as np
 
 from tools.groq_client import client as groq_client
 import spaces
+
+from tools.generate_lyrics import generate_structured_lyrics, format_lyrics_for_yue
 
 @dataclass
 class AppState:
@@ -113,15 +116,12 @@ def response(state: AppState, audio: tuple, genre_value, mood_value, theme_value
         return AppState(), []
     
     # Update state with current dropdown values
-    state.genre = genre_value
-    state.mood = mood_value
-    state.theme = theme_value
+    state.genre, state.mood, state.theme = genre_value, mood_value, theme_value
 
     file_name = f"/tmp/{xxhash.xxh32(bytes(audio[1])).hexdigest()}.wav"
 
     sf.write(file_name, audio[1], audio[0], format="wav")
 
-    # Initialize Groq client
     api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         raise ValueError("Please set the GROQ_API_KEY environment variable.")
@@ -133,25 +133,65 @@ def response(state: AppState, audio: tuple, genre_value, mood_value, theme_value
         if transcription.startswith("Error"):
             transcription = "Error in audio transcription."
 
-        # Append the user's message in the proper format
         state.conversation.append({"role": "user", "content": transcription})
 
-        # Generate assistant response with current settings
         assistant_message = generate_chat_completion(client, state.conversation, state.genre, state.mood, state.theme)
 
-        # Append the assistant's message in the proper format
         state.conversation.append({"role": "assistant", "content": assistant_message})
+        
 
-        print(state.conversation)
+        # print(state.conversation)
 
-        # Optionally, remove the temporary file
         os.remove(file_name)
 
     return state, state.conversation
 
 
+# Function to generate music from lyrics
+@spaces.GPU(duration=60, progress=gr.Progress(track_tqdm=True))
+def generate_music_from_lyrics(state: AppState):
+    # Extract the final lyrics from the conversation
+    # Look for the latest assistant response containing lyrics
+    lyrics = ""
+    for message in reversed(state.conversation):
+        if message["role"] == "assistant" and "verse" in message["content"].lower() and "chorus" in message["content"].lower():
+            lyrics = message["content"]
+            break
+    
+    if not lyrics:
+        return None, "ERROR: No lyrics found to generate music. Please create lyrics first be sure that the AI generated at least one CHORUS and VERSE in ONE message."
+
+    try:
+        # TODO 1: From the chat history, ask an LLM To generate the complete lyrics with structure output, it could be gcloud, gemma 3 for example
+        structured_lyrics = generate_structured_lyrics(
+            conversation=state.conversation,
+            genre=state.genre,
+            mood=state.mood,
+            theme=state.theme
+        )
+        
+        # Format the structured lyrics into a string
+        lyrics = format_lyrics_for_yue(structured_lyrics, state.genre, state.mood, state.theme)
+
+        print(lyrics)
+
+        # TODO 2: From the lyrics, generate music using a music generation model (YUE)
+
+        # Save temporary audio file
+        # tmp_file = f"/tmp/generated_music_{xxhash.xxh32(lyrics.encode()).hexdigest()}.wav"
+        # sf.write(tmp_file, audio_data, sample_rate)
+        
+        # return tmp_file, f"Music generated for your {state.genre} song with {state.mood} mood about {state.theme}!"
+        
+    except Exception as e:
+        error_msg = f"Error generating music: {str(e)}"
+        print(error_msg)
+        return None, error_msg
+
+
 # load frontend.js
 js = open("frontend.js").read()
+
 
 
 js_reset = """
@@ -190,6 +230,13 @@ with gr.Blocks(theme=theme_gradio, js=js) as demo:
     with gr.Row():
         chatbot = gr.Chatbot(label="Creative Conversation", type="messages", height=400)
 
+    with gr.Row():
+        generate_btn = gr.Button("🎵 Generate Music from Lyrics", variant="primary")
+    
+    with gr.Row():
+        music_output = gr.Audio(label="Generated Music", type="filepath")
+        generation_status = gr.Textbox(label="Status", placeholder="Click the button above to generate music")
+
     state = gr.State(value=AppState())
     
     genre.change(update_state_settings, [state, genre, mood, theme], [state])
@@ -202,7 +249,6 @@ with gr.Blocks(theme=theme_gradio, js=js) as demo:
         [input_audio, state],
     )
     
-    # Pass dropdown values to response function
     respond = input_audio.stop_recording(
         response, [state, input_audio, genre, mood, theme], [state, chatbot]
     )
@@ -211,17 +257,27 @@ with gr.Blocks(theme=theme_gradio, js=js) as demo:
         lambda state: state, state, state, js=js_reset
     )
 
+    generate_btn.click(
+        generate_music_from_lyrics,
+        [state],
+        [music_output, generation_status]
+    )
+
     # Reset button now creates a new AppState with default values
     cancel = gr.Button("New Song", variant="stop")
     cancel.click(
-        lambda: (AppState(), gr.Audio(recording=False)),
+        lambda: (AppState(), gr.Audio(recording=False), None, "Start a new song"),
         None,
-        [state, input_audio],
+        [state, input_audio, music_output, generation_status],
         cancels=[respond, restart],
     )
 
-    gr.Markdown("### How to use:\n1. Select your genre, mood, and theme preferences\n2. Just start talking about your song ideas\n3. The assistant will create lyrics based on your selections\n4. Give feedback to refine the lyrics\n5. Click 'New Song' to start over")
+    gr.Markdown("### How to use:\n1. Select your genre, mood, and theme preferences\n2. Just start talking about your song ideas\n3. The assistant will create lyrics based on your selections\n4. Give feedback to refine the lyrics\n5. When you're happy with the lyrics, click 'Generate Music from Lyrics'\n6. Listen to your generated song!")
 
 
 if __name__ == "__main__":
-    demo.launch()
+    import tempfile
+    if os.name == "nt":
+        demo.launch(allowed_paths=[tempfile.gettempdir()])
+    else:
+        demo.launch(allowed_paths=["/tmp"])
