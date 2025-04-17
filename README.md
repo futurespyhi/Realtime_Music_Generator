@@ -18,7 +18,7 @@ MiloMusic is an innovative web application that converts spoken words into music
 ### Backend
 - **Framework**: Django
 - **Speech-to-Text**: Google Chirp 2
-- **Speech Processing**: Custom DeepSeek-V3 fine-tuned with PyTorch + C++ optimizations
+- **Speech Processing**: Custom DeepSeek-V3
 - **Text-to-Speech**: Spark TTS
 - **Database**: PostgreSQL
 - **Caching/Session Management**: Redis
